@@ -81,18 +81,29 @@ def get_site_data(soildata):
     return sitedata
 
 
+
+def getenv_or_die(name):
+  envvar = os.getenv(name)
+  if not envvar:
+    import sys 
+    sys.stderr.write("Error: Environment variable %s is not set\n" % name) 
+    exit(1)
+  return envvar
+
+
 #database connection
-username = "hoek008"
-password = "alterra"
-hostname = "d0116632"
-dbname   = "ggcmi"
+username = getenv_or_die("DB_USER")
+password = getenv_or_die("DB_PASS")
+hostname = getenv_or_die("DB_HOST")
+dbname   = getenv_or_die("DB_DATABASE")
 connstr = 'mysql://%s:%s@%s/%s?charset=utf8' % (username, password, hostname, dbname)
 
 # Folder for pcse code
-pcse_dir = r"/home/hoek008/projects/ggcmi/ggcmi/pcse"
+pcse_dir = r"/opt/ggcmi/pcse"
 
 # Top level folder for data
-data_dir = "/home/hoek008/projects/ggcmi/data/"
+data_dir = getenv_or_die("DATA_INPUT_DIR")
+data_output = getenv_or_die("DATA_OUTPUT_DIR")
 
 # Meteorological input data in HDF5
 hdf5_meteo_file = os.path.join(data_dir, "AgMERRA", "AgMERRA_1980-01-01_2010-12-31_final.hf5")
@@ -147,7 +158,9 @@ days_before_CROP_START_DATE = 90
 days_after_CROP_END_DATE = 14
 
 # Location where output should be written
-top_level_dir = data_dir
+
+output_basedir = os.getenv("OUTPUT_BASEDIR", )
+top_level_dir = data_output
 output_folder = os.path.join(top_level_dir, "output")
 output_file_template = "ggcmi_results_task_%010i.pkl"
 shelve_folder = os.path.join(top_level_dir, "shelves")
@@ -162,7 +175,11 @@ log_folder = os.path.join(top_level_dir, "logs")
 #   with a maximum of multiprocessing.cpu_count()
 # * a negative integer number will be subtracted from multiprocessing
 # .cpu_count() with a minimum of 1 CPU
-number_of_CPU = 1
+
+try:
+  number_of_CPU = int(os.getenv("NR_OF_CPUS"))
+except Exception: # if not given, or non-integer
+  number_of_CPU = None
 
 # this is the maximum number of tasks that a worker is allowed to 
 # execute.

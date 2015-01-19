@@ -71,7 +71,12 @@ class RotatingShelve(object):
     def _to_shelve(self, key, obj):
         """"Store given obj under given key in the current shelve."""
         if self._handle is None:
-            self._handle = shelve.open(self._current_shelve_fname)
+            try: 
+                self._handle = shelve.open(self._current_shelve_fname)
+            except Exception as e:
+                logging.exception("Cannot open shelf at file %s: %s" % (self._current_shelve_fname, str(e) ) )
+		
+                
         self._handle[key] = obj
         self._key_count += 1
 
@@ -130,8 +135,9 @@ def main():
         print msg
         sys.exit()
     except Exception:
-        msg = "General error: see log for traceback."
-        logging.exception(msg)
+        msg = "General error: see log in %s for traceback." % run_settings.output_folder
+        print(msg)
+	logging.exception(msg)
     finally:
         rotating_shelve.close()
         logging.shutdown()
