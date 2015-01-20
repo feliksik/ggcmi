@@ -1,18 +1,25 @@
-
+#################################################
+#
 # settings of the mysql container, if you want to run it locally
+#
 export TEST_MYSQL_ADDR=localhost
 export TEST_MYSQL_PORT=3306
 export TEST_MYSQL_ROOT_PASSWORD=s3cr3t
 export TEST_MYSQL_CONTAINER_NAME=ggcmi-mysql
 
+# testdata for the docker-based MySQL server
 export TEST_MYSQL_DATA=$(readlink -e ../data/Dump20141114.sql)
 
+
+#################################################
+#
 # settings of the worker container
+#
 export DB_USER=root
 export DB_PASS=$TEST_MYSQL_ROOT_PASSWORD
-
 # DB_HOST can include port
 # use $TEST_MYSQL_CONTAINER_NAME to activate the local test mysql server in docker container
+#export DB_HOST="alterra-ei-ggcmi.cihy1ytynivm.us-west-2.rds.amazonaws.com"
 export DB_HOST=$TEST_MYSQL_CONTAINER_NAME
 export DB_DATABASE=ggcmi
 
