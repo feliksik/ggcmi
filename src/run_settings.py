@@ -159,7 +159,6 @@ days_after_CROP_END_DATE = 14
 
 # Location where output should be written
 
-output_basedir = os.getenv("OUTPUT_BASEDIR", )
 top_level_dir = data_output
 output_folder = os.path.join(top_level_dir, "output")
 output_file_template = "ggcmi_results_task_%010i.pkl"
