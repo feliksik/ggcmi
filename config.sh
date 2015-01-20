@@ -8,7 +8,7 @@ export TEST_MYSQL_ROOT_PASSWORD=s3cr3t
 export TEST_MYSQL_CONTAINER_NAME=ggcmi-mysql
 
 # testdata for the docker-based MySQL server
-export TEST_MYSQL_DATA=$(readlink -e ../data/Dump20141114.sql)
+export TEST_MYSQL_DATA=../data/Dump20141114.sql
 
 
 #################################################
@@ -25,12 +25,12 @@ export DB_DATABASE=ggcmi
 
 # limit nr of CPUs
 # None: use all
-# >0: use given number 
+# >0: use given number
 # <0: keep given number idle
 export NR_OF_CPUS=None
 
 # host directories where worker containers reads/writes data
 # use readlink to convert to absolute path, required for docker volume mounting
-export GGCMI_INPUT_DATA_HOST=$(readlink -e ../data)
-export GGCMI_OUTPUT_DATA_HOST=$(readlink -e ../output)
+export GGCMI_INPUT_DATA_HOST=../data
+export GGCMI_OUTPUT_DATA_HOST=../output
 

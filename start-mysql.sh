@@ -10,6 +10,12 @@ function die {
 # start database, if not running already
 if ! docker ps | grep -q $TEST_MYSQL_CONTAINER_NAME; then
 
+  if [ ! -e "$TEST_MYSQL_DATA" ]; then
+    die "environment variable TEST_MYSQL_DATA is not a file: $TEST_MYSQL_DATA"
+  fi
+  export TEST_MYSQL_DATA_HOSTDIR=$(dirname $(readlink -e $TEST_MYSQL_DATA))
+  export TEST_MYSQL_DATA_FILENAME=$(basename $(readlink -e $TEST_MYSQL_DATA))
+
   echo "start $TEST_MYSQL_CONTAINER_NAME server in container..."
   docker run --privileged=false --name $TEST_MYSQL_CONTAINER_NAME \
     -e MYSQL_ROOT_PASSWORD=$TEST_MYSQL_ROOT_PASSWORD \
@@ -21,9 +27,6 @@ if ! docker ps | grep -q $TEST_MYSQL_CONTAINER_NAME; then
 
   # wait until the container is started polling would be nicer)
   sleep 10
-
-  export TEST_MYSQL_DATA_HOSTDIR=$(dirname $TEST_MYSQL_DATA)
-  export TEST_MYSQL_DATA_FILENAME=$(basename $TEST_MYSQL_DATA)
 
   echo "fill db with testdata..."
   docker run -it --link $TEST_MYSQL_CONTAINER_NAME:mysql \
